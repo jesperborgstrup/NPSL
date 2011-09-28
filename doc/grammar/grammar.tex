@@ -1,0 +1,60 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[center]{caption}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{ctable}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{rotating}
+\usepackage[fleqn]{amsmath}
+
+\newcommand{\term}[1]{{\bf #1}}
+\addto\captionsenglish{\renewcommand{\refname}{}}
+
+\newcommand{\todo}[1]{\noindent\colorbox{Orange}{\\[\baselineskip]\parbox{\linewidth}{{\bf TODO:} #1}}\\\addto\todos{#1\\\\}}
+
+\author{Jesper Borgstrup}
+\title{Grammar for Network Protocol Specification Language}
+%\date{DATE}
+
+\begin{document}
+
+\maketitle
+
+\section{Grammar}
+\begin{eqnarray*}
+Protocol & ::= & Module^* \\
+Module & ::= & ModuleName \ \textbf{\{}\ Declaration^*\ \textbf{\}} \\
+Declaration & ::= & Var\ \textbf{=}\ Expr \\
+Var & ::= & String \\
+Expr & ::= & Var\ | \\
+& & Prim \\
+Prim & ::= & Num\ |\ String\ |\ Bool \\
+ModuleName & ::= & String \\
+Num & ::= & [-]Digit^+[\textbf{.}Digit^*] \\
+Bool & ::= & \textbf{True}\ |\ \textbf{False}
+\end{eqnarray*}
+
+we also need to support dictionaries and lists. include other files
+
+\section{New Grammar}
+\begin{eqnarray*}
+Protocol & ::= & Declaration^* \\
+Declaration & ::= & Var\ \textbf{:}\ Expr\ |\\
+& & Module \\
+Module & ::= & ModuleName \ \textbf{\(}\ Declaration^*\ \textbf{\)} \\
+Var & ::= & String \\
+Expr & ::= & Prim \\
+Prim & ::= & Num\ |\ Bool \\
+Num & ::= & [-\ |\ +]Digit^+ \\
+Bool & ::= & \textbf{True}\ |\ \textbf{False}
+\end{eqnarray*}
+
+
+
+
+\end{document}

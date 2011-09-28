@@ -1,0 +1,7 @@
+doc/*/*.*
+!doc/*/*.tex
+!doc/*/*.pdf
+
+src/*.hi
+src/*.hs~
+src/*.o
