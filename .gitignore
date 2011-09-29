@@ -5,3 +5,7 @@ doc/*/*.*
 src/*.hi
 src/*.hs~
 src/*.o
+
+tmp
+
+**/*/.pyc
