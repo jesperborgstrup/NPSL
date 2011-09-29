@@ -2,10 +2,10 @@ doc/*/*.*
 !doc/*/*.tex
 !doc/*/*.pdf
 
-src/*.hi
-src/*.hs~
-src/*.o
+*.hi
+*.hs~
+*.o
 
 tmp
 
-**/*/.pyc
+*.py[co]
