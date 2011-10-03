@@ -13,31 +13,42 @@ class Server(threading.Thread):
 	host = None
 	port = None
 	interface = None
+	logger = None
 	
-	def __init__(self, host='', port=1234, interface=None):
+	def __init__(self, host='', port=1234, interface=None, logger=None):
 		threading.Thread.__init__(self)
 		self.port = port
 		self.host = host
 		self.interface = interface
 		self.default_encoding = locale.getdefaultlocale()[1]
+
+		if logger is None:
+			self.logger = DummyLogger()
+		else:
+			self.logger = logger
 		
 	def run(self):
-		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.socket.bind((self.host,self.port))
-		self.socket.listen(self.backlog)
-		self.log( "Server started on %s:%d" % (self.host, self.port), 2 )
+		try:
+			self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			self.socket.bind((self.host,self.port))
+			self.socket.listen(self.backlog)
+			self.log( "Server started on %s:%d" % (self.host, self.port), 2 )
+		except socket.error, (value, message):
+			self.socket_error(value, message)
+			return
 		
 		while 1:
 			try:
-				thread = ClientThread( self, self.socket.accept() )
+				thread = ClientThread( self.socket.accept(), self, logger=self.logger )
 				self.threads.append( thread )
 				thread.start()
-			except Exception:
+			except socket.error, (value, message):
+				self.socket_error(value, message)
+			except:
 				self.log_exception()
 				
 	def log(self, str, level=5):
-		if level <= 6:
-			print str
+		self.logger.log(str, level)
 		
 	def log_exception(self):
 		exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -45,7 +56,11 @@ class Server(threading.Thread):
 		self.log("=== AN EXCEPTION OCCURED ===", level=1)
 		[self.log(line.decode( self.default_encoding ), level=1) for line in lines]
 
+	def socket_error(self, value, message):
+		self.log( "ERROR %d (%s)" % (value, message.decode( self.default_encoding )) , level=1 )
+		
 	def stop(self):
+		# Close all client sockets
 		self.socket.shutdown()
 		self.socket.close()
 """		
@@ -61,3 +76,7 @@ class Server(threading.Thread):
 		for thread in self.threads:
 			function(thread)
 """
+
+class DummyLogger:
+	def log(self, str, level=5):
+		pass

@@ -1,1 +1,13 @@
-File "winamp.npsl"
+param => (State, int)
+
+winamp (
+
+	param <> (Dummy, string)
+
+	=> 10 set_volume (Volume, byte)
+	=> 20 get_volume
+	<= 20 get_volume (Volume, byte)
+	=> 150 get_playlist
+	<= 150 get_playlist (Tracks, strings), (Two, string)
+
+)

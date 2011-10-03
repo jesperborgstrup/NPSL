@@ -99,11 +99,10 @@ readProtocol input = case parse mainParser "" input of
 --parseFile :: String -> [Declaration]
 parseFile file = do str <- readFile file
 		    case parse mainParser "" str of
-		      Left err -> do putStrLn $ show err
-		                     return []
+		      Left err -> do putStrLn err
+		      		     return []
 		      Right val -> return val
 		      
-    
 printFile :: String -> IO ()
 printFile file = do decls <- parseFile file
 		    putStrLn $ show decls
