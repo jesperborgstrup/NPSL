@@ -1,0 +1,5 @@
+#!/bin/bash
+rm *~ -rIf
+rm **/*~ -rIf
+rm **/*.pyc -rIf
+rm **/#*# -rIf

@@ -30,24 +30,17 @@ parameter    = Group( lparam + identifier + Suppress(Literal(",")) + datatype + 
 
 moduleparam  = Group( Keyword("param") + direction + parameter )
 message      = Group( direction + integer + identifier + Group( Optional( delimitedList(parameter) ) ) ) 
-module       = Group( identifier + lparam + declarations + rparam )
+module       = Group( identifier + integer + lparam + declarations + rparam )
+
+comment      = Suppress( "#" + restOfLine)
 
 declaration  = moduleparam | message | module
 declarations << ( ZeroOrMore( declaration ) )
 
 npsl         = declarations + StringEnd()
 
-if __name__ == "__main__":
-	import sys, os, os.path
-	if len( sys.argv ) == 0:
-		sys.exit(-1)
-		
-	filename = sys.argv[1]
-	if not os.path.exists( filename ):
-		sys.exit(-1)
-		
-	f = open(filename)
-	input = "".join( f.readlines() )
-	
-	print npsl.parseString( input ).asXML()
-	
+npslparser   = npsl.copy()    
+
+npslparser.ignore(comment)
+
+

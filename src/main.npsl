@@ -1,8 +1,8 @@
-param => (State, int)
+#param => (State, int)
 
-winamp (
+winamp 100 (
 
-	param <> (Dummy, string)
+#	param => (Dummy, string)
 
 	=> 10 set_volume (Volume, byte)
 	=> 20 get_volume

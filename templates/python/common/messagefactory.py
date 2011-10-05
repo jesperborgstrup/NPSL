@@ -55,7 +55,7 @@ class MessageFactory:
 		
 	def __call__(self, *params):
 		if len( params ) != len( self.main.params ):
-			raise TypeError ( "%s expected %d arguments, got %d (%s) (%s)" % (self.main.name, len( self.main.params ), len(params ), self.main.params, params ) )
+			raise TypeError ( "%s expected %d arguments, got %d" % (self.main.name, len( self.main.params ), len(params ) ) )
 			
 		self.params = params
 		
@@ -65,6 +65,8 @@ class MessageFactory:
 			return self
 		
 	def __getattr__(self, name):
+		if len( self.params ) != len( self.main.params ):
+			raise TypeError ( "%s expected %d arguments, got %d" % (self.main.name, len( self.main.params ), len( self.params ) ) )
 		messages = filter( lambda (k,v): v.name == name, self.main.messages.iteritems() )
 		if len( messages ) > 0:
 			return MessageFactory( messages[0][1], self )
