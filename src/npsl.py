@@ -1,5 +1,5 @@
 from optparse import OptionParser
-from npslparser import npslparser, npsl
+from npslparser import npsl
 from output import Output
 from context import Context
 import os.path, sys, languages
@@ -13,13 +13,14 @@ class ArgumentError(Exception):
 		return self.err
 
 class Options:
-	input = None
+	input = {}
 	input_file = sys.stdin
 	client = None
 	output_folder = "out"
 	output_language = None
 	verbose = False
 	context = None
+	extra = {}
 	
 	def __init__(self):
 		
@@ -45,6 +46,8 @@ def makeOptionParser():
 					  help="Output files in language LANG", metavar="LANG")
 	parser.add_option("-v", "--verbose", action="store_true", dest="verbose",
 					  help="Print output during processing")
+	parser.add_option("--java-package", dest="java_package", metavar="PACKAGE",
+					  help="Sets Java packages to PACKAGE.npsl")
 	
 	return parser
 
@@ -90,10 +93,13 @@ def process_options(optargs):
 								 "Possible languages are:\r\n" + "\r\n".join(languages.__all__.keys()))
 		else:
 			result.language = languages.__all__[lang]
-			result.language.context = result.context
-		
+			try:
+				result.language.set_options(result, optargs)
+			except RuntimeError, err:
+				raise ArgumentError(err.message)
+			
 	# Read NPSL
-	result.input = npsl.parseString( "".join(result.input_file.readlines()) )[0]
+	result.input.update( npsl.parseString( "".join(result.input_file.readlines()) )[0] )
 	
 	# Make output folder if it doesn't exist
 	if not os.path.exists( result.output_folder ):

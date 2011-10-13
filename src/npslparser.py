@@ -1,4 +1,4 @@
-from grammar import *
+from grammar import integer, direction, parameter, moduleparam, message, module, npsl
 
 integer.addParseAction(lambda s,l,tok: int(tok[0]))
 

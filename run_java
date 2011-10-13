@@ -1,0 +1,3 @@
+#!/bin/bash
+python src/npsl.py --verbose --in-file=src/main.npsl --client --out-folder=tmp/java_client --out-language=java --java-package=com.example
+python src/npsl.py --verbose --in-file=src/main.npsl --server --out-folder=tmp/java_server --out-language=java --java-package=com.example

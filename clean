@@ -1,5 +1,5 @@
 #!/bin/bash
-rm *~ -rIf
-rm **/*~ -rIf
-rm **/*.pyc -rIf
-rm **/#*# -rIf
+find . -name '#*#' | xargs -r rm
+find . -name '*~'  | xargs -r rm
+find . -name '*.pyc' | xargs -r rm
+rm -rf tmp/*
