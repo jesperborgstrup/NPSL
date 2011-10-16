@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public abstract class SocketThread extends Thread {
 	
@@ -38,7 +37,7 @@ public abstract class SocketThread extends Thread {
 		this.connection = connection;
 		this.receiveMessage = receiveMessage;
 		this.sendMessage = sendMessage;
-		this.messageFactory = new MessageFactory(sendMessage);
+		this.messageFactory = new MessageFactory(this.sendMessage);
 		
 		if (socket != null) {
 			init();

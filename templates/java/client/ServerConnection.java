@@ -1,5 +1,5 @@
-{% set package, java_subpackage = "client", "client" %}
-package {{ java_package }};
+{#{% set package, java_subpackage = "client", "client" %}
+    package {{ java_package }};#}
 
 import java.util.Map;
 

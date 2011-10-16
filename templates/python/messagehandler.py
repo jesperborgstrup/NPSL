@@ -56,7 +56,7 @@ class MessageHandler:
 		if   datatype == DataTypes.Byte:
 			return self.parse_struct(buffer, ">B")
 		elif datatype == DataTypes.Int:
-			return self.parse_struct(buffer, ">I")
+			return self.parse_struct(buffer, ">i")
 		elif datatype == DataTypes.IntList:
 			return self.parse_int_list(buffer)
 		elif datatype == DataTypes.Float:
