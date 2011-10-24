@@ -33,9 +33,9 @@ class MessageFactory:
 				[self.__write_type(DataTypes.String, i) for i in value]
 			)
 		elif typ == DataTypes.Binary:
-			if len( encoded ) >= 2 ** 32:
+			if len( value ) >= 2 ** 32:
 				raise RuntimeError( "Binary too long. Max size is %d bytes" % (2 ** 32 - 1) )
-				return struct.pack( ">I", len( value ) ) + value
+			return struct.pack( ">I", len( value ) ) + value
 		else:
 			raise RuntimeError( "Unknown datatype: %s" % typ )
 		

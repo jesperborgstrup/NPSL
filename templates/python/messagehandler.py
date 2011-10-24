@@ -66,7 +66,7 @@ class MessageHandler:
 		elif datatype == DataTypes.StringList:
 			return self.parse_string_list(buffer)
 		elif datatype == DataTypes.Binary:
-			return self.parse_string(buffer)
+			return self.parse_binary(buffer)
 		else:
 			raise RuntimeException("Unknown datatype: %d" % datatype)
 			
@@ -91,7 +91,10 @@ class MessageHandler:
 			result.append(string)
 			
 		return (result, buffer)
-		
 	
+	def parse_binary(self, buffer):
+		length, buffer = self.parse_struct(buffer, ">I")
+		return self.parse(buffer, length)
+		
 	def log(self, str, level=5):
 		return self.logger.log( "Handler> %s" % (str), level)
