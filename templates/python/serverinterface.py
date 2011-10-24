@@ -1,4 +1,4 @@
-{% set output_dest, package = "serverinterface.py", "server" %}
+{#{% set output_dest, package = "serverinterface.py", "server" %}#}
 
 class ServerInterface:
 	

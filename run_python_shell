@@ -1,0 +1,3 @@
+#!/bin/bash
+python src/npsl.py --verbose --in-file=src/shell.npsl --client --out-folder=tmp/python_shell_client --out-language=python 
+python src/npsl.py --verbose --in-file=src/shell.npsl --server --out-folder=tmp/python_shell_server --out-language=python

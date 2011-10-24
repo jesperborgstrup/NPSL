@@ -1,4 +1,4 @@
-{% set output_dest, package = "run_server.py", "server" %}
+{#{% set output_dest, package = "run_server.py", "server" %}#}
 
 from server import Server
 from serverinterface import ServerInterface

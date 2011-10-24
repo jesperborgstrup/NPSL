@@ -1,0 +1,6 @@
+param => (user, int)
+shell 400 (
+       param => (executable, string)
+       => 100 execute
+       => 101 execute_with_argument (argument, string), (arg2, int), (arg3, ints)
+)

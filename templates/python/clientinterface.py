@@ -1,4 +1,4 @@
-{% set output_dest, package = "clientinterface.py", "client" %}
+{#{% set output_dest, package = "clientinterface.py", "client" %}#}
 
 class ClientInterface:
 	

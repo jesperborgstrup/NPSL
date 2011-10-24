@@ -60,7 +60,8 @@ class SocketThread( threading.Thread ):
 		self.close()
 		
 	def handle_message(self, message):
-		self.interface.message( self.handler.handle( message, self.recvmessage )[0], self )
+		mainMessage = self.handler.handle( message, self.recvmessage )[0]
+		self.interface.message( mainMessage.child, mainMessage.params, self )
 		
 	def log(self, str, level=5):
 		return self.logger.log( "%s:%s> %s" % (self.host, self.port, str), level)

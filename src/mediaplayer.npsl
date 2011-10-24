@@ -1,9 +1,9 @@
 mediaplayer 100 (
     =>  1  play
     =>  2  pause
-    => 10  set_volume (Volume, byte)
+    => 10  set_volume (volume, byte)
     => 20  get_volume
-    <= 20  get_volume (Volume, byte)
+    <= 20  get_volume (volume, byte)
     => 150 get_playlist
-    <= 150 get_playlist (Tracks, strings)
+    <= 150 get_playlist (tracks, strings)
 )

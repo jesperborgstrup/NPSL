@@ -1,4 +1,4 @@
-{% set output_dest, package = "run_client.py", "client" %}
+{#{% set output_dest, package = "run_client.py", "client" %}#}
 
 from client import Client
 from clientinterface import ClientInterface

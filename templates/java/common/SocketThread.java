@@ -149,7 +149,10 @@ public abstract class SocketThread extends Thread {
 			if (e.getMessage().equalsIgnoreCase( "socket closed" ) ||
 				e.getMessage().equalsIgnoreCase( "connection reset" )) {
 				disconnect();
-			} else {
+			} else if (e.getMessage().equalsIgnoreCase( "broken pipe" )) {
+			    logger.log(String.format( "Trying to operate on broken pipe. Closing connection."), 5);
+			    disconnect();
+} else {
 				logger.log(String.format("We have a unhandled SocketException, namely %s", e.getMessage()), 1);
 			}
 		} else if (e instanceof EOFException) {
