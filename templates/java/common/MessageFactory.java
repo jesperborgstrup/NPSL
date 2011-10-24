@@ -129,7 +129,7 @@ public class MessageFactory {
 					writeStringList( (String[]) value );
 					break;
 				case Binary:
-					out.write( (byte[]) value );
+					writeBinary( (byte[]) value );
 					break;
 			}
 		} catch (IOException e) {
@@ -150,4 +150,11 @@ public class MessageFactory {
 			out.writeUTF( value[i] );
 	}
 	
+	private void writeBinary(byte[] value) throws IOException {
+		out.writeInt( value.length );
+		out.write( value );
+		// TODO Auto-generated method stub
+		
+	}
+
 }
