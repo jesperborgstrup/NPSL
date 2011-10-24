@@ -1,0 +1,5 @@
+#!/bin/bash
+python src/npsl.py --verbose --in-file=examples/sendfile.npsl --client --out-folder=tmp/java_sendfile_client --out-language=java --java-package=com.example.sendfile
+python src/npsl.py --verbose --in-file=examples/sendfile.npsl --server --out-folder=tmp/java_sendfile_server --out-language=java --java-package=com.example.sendfile
+python src/npsl.py --verbose --in-file=examples/sendfile.npsl --client --out-folder=tmp/python_sendfile_client --out-language=python
+python src/npsl.py --verbose --in-file=examples/sendfile.npsl --server --out-folder=tmp/python_sendfile_server --out-language=python
