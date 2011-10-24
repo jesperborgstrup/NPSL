@@ -1,0 +1,11 @@
+This source file was generated automatically by the NPSL
+(Network Protocol Specification Language) parser.
+http://jesper.borgstrup.dk/npsl
+
+Original filename: %filename%
+Created: %timestamp%
+
+This work is licensed under the
+Creative Commons Attribution-Noncommercial-Share Alike 3.0 Unported License.
+To view a copy of the license, visit
+http://creativecommons.org/licenses/by-nc-sa/3.0/

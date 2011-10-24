@@ -57,5 +57,7 @@ class LanguageJava(OutputLanguage):
         
         return (output_dest, template.render(self.options.input))
 
-    def comment(self, lines):
-        return "/*\r\n" + "\r\n".join(lines) + "\r\n*/\r\n"
+    def comment(self, comment):
+        lines = comment.splitlines()
+        lines = map(lambda line: " * " + line, lines)
+        return "/*\r\n" + "\r\n".join(lines) + "\r\n */\r\n"

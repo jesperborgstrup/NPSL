@@ -38,7 +38,7 @@ class LanguagePython(OutputLanguage):
         
         return (output_dest, template.render(self.options.input))
 
-    def comment(self, lines):
-        return map(lambda l: "# " + l, lines)
+    def comment(self, comment):
+        return "\r\n".join( map(lambda l: "# " + l, comment.splitlines()) )
 
     
