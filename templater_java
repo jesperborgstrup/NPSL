@@ -1,0 +1,1 @@
+python src/templater.py -i /home/jesper/workspace/android_test_client/src/dk/borgstrup/android/mediaplayer/npsl/ -l java -v
