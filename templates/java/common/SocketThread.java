@@ -139,12 +139,16 @@ public abstract class SocketThread extends Thread {
 	}
 	
 	public void disconnect() {
+		disconnect(DisconnectReason.USER);
+	}
+	
+	private void disconnect(DisconnectReason reason) {
 		if (closed)
 			return;
 		try {
 			closed = true;
 			socket.close();
-			connection.Disconnected(this);
+			connection.Disconnected(this, reason);
 		} catch (IOException e) {
 			// We don't care about exceptions when closing the socket
 		}		
@@ -162,16 +166,16 @@ public abstract class SocketThread extends Thread {
 */
 		if (e instanceof SocketException) {
 			if (e.getMessage().equalsIgnoreCase( "socket closed" ) ||
-				e.getMessage().equalsIgnoreCase( "connection reset" )) {
-				disconnect();
-			} else if (e.getMessage().equalsIgnoreCase( "broken pipe" )) {
-			    logger.log(String.format( "Trying to operate on broken pipe. Closing connection."), 5);
-			    disconnect();
-} else {
+				e.getMessage().equalsIgnoreCase( "connection reset" ) ||
+				e.getMessage().equalsIgnoreCase( "broken pipe" )) {
+				disconnect(DisconnectReason.OTHER_END_CLOSED);
+			} else {
+				disconnect(DisconnectReason.UNKNOWN);
 				logger.log(String.format("We have a unhandled SocketException, namely %s", e.getMessage()), 1);
 			}
 		} else if (e instanceof EOFException) {
-			disconnect();
+			disconnect(DisconnectReason.UNKNOWN);
+			logger.log(String.format("handleException came upon an EOFException, namely %s", e.getMessage()), 1);
 		} else {
 			throw new RuntimeException( "Unhandled Exception", e );
 		}
