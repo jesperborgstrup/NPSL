@@ -5,9 +5,15 @@ import java.io.IOException;
 
 public class MessageHandler {
 	
+	@SuppressWarnings("serial")
+	public class InvalidMessageException extends Exception {
+		public InvalidMessageException() { super(); }
+		public InvalidMessageException(Exception e) { super(e); }
+	}
+	
 	public MessageHandler() {}
 	
-	public Message handle(ByteArray buffer, MessageType messageType) {
+	public Message handle(ByteArray buffer, MessageType messageType) throws InvalidMessageException {
 		Object[] params = new Object[messageType.getParameterTypes().length];
 
 		int i = 0;
@@ -27,18 +33,15 @@ public class MessageHandler {
 					MessageType subMessageType = messageType.getMessagesById().get(msgId);
 					subMessage = handle(buffer, subMessageType);
 				} else {
-					throw new RuntimeException( String.format( "Unknown message %d", msgId ) );
+					throw new InvalidMessageException();
 				}
 			}
 			
 			Message result = new Message(messageType, params, subMessage);
 			return result;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new InvalidMessageException(e);
 		}
-		
-		return null;
 	}
 
 }

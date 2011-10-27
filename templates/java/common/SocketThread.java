@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
+
+import {{ java_package_root }}.common.MessageHandler.InvalidMessageException;
 
 /**
  * Base class for threads reading from and writing to sockets
@@ -18,7 +21,9 @@ import java.net.SocketException;
  */
 public abstract class SocketThread extends Thread {
 	
+	private static final int MESSAGE_READ_TIMEOUT = 5000;
 	private Socket socket;
+	
 	// Logger is protected in order for us to set it after the constructor
 	// has been called in Client
 	protected Logger logger;
@@ -64,6 +69,12 @@ public abstract class SocketThread extends Thread {
 		socket = new Socket();
 		socket.connect(isa, timeout);
 		init();
+		
+		// If the socket has been disconnected previously, wake up
+		// the thread for reading
+		synchronized(this) {
+			notify();
+		}
 	}
 	
 	private void init() throws IOException {
@@ -100,9 +111,9 @@ public abstract class SocketThread extends Thread {
 		byte[] buffer;
 		while (true) {
 			if (closed) {
-				synchronized (this.socket) { 
+				synchronized (this) { 
 					try {
-						this.socket.wait();
+						wait();
 					} catch (InterruptedException e) {
 					}
 				}
@@ -110,9 +121,15 @@ public abstract class SocketThread extends Thread {
 			if (!closed) {
 				try {
 					messageLength = in.readInt();
-					logger.log( String.format("received message of length %d", messageLength) , 10 );
-					buffer = read(messageLength);
-					handleMessage( buffer );
+					logger.log( String.format("receiving message of length %d", messageLength) , 10 );
+					socket.setSoTimeout( MESSAGE_READ_TIMEOUT );
+					try {
+						buffer = read(messageLength);
+						handleMessage( buffer );
+					} catch (Exception e) {
+						handleException(e);
+					}
+					socket.setSoTimeout( 0 );
 				} catch (IOException e) {
 					handleException(e);
 				}
@@ -121,8 +138,13 @@ public abstract class SocketThread extends Thread {
 	}
 	
 	private void handleMessage(byte[] buffer) {
-		Message m = handler.handle(new ByteArray(buffer), receiveMessage);
-		connection.Message(this, m.getParameters(), m.getSubMessage());
+		Message m;
+		try {
+			m = handler.handle(new ByteArray(buffer), receiveMessage);
+			connection.Message(this, m.getParameters(), m.getSubMessage());
+		} catch (InvalidMessageException e) {
+			handleException(e);
+		}
 	}
 	
 	public boolean sendMessage(Object... args) {
@@ -174,8 +196,11 @@ public abstract class SocketThread extends Thread {
 				logger.log(String.format("We have a unhandled SocketException, namely %s", e.getMessage()), 1);
 			}
 		} else if (e instanceof EOFException) {
-			disconnect(DisconnectReason.UNKNOWN);
-			logger.log(String.format("handleException came upon an EOFException, namely %s", e.getMessage()), 1);
+			disconnect(DisconnectReason.OTHER_END_CLOSED);
+		} else if (e instanceof InvalidMessageException) {
+			disconnect(DisconnectReason.BAD_MESSAGE);
+		} else if (e instanceof SocketTimeoutException) {
+			disconnect(DisconnectReason.BAD_MESSAGE);
 		} else {
 			throw new RuntimeException( "Unhandled Exception", e );
 		}
