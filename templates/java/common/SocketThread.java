@@ -5,10 +5,17 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
+/**
+ * Base class for threads reading from and writing to sockets
+ * 
+ * You 
+ * @author jesper
+ *
+ */
 public abstract class SocketThread extends Thread {
 	
 	private Socket socket;
@@ -40,38 +47,35 @@ public abstract class SocketThread extends Thread {
 		this.messageFactory = new MessageFactory(this.sendMessage);
 		
 		if (socket != null) {
-			init();
+			try {
+				init();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	
-	protected boolean connect(String host, int port) {
-		try {
-			InetAddress ia = InetAddress.getByName(host);
-			socket = new Socket(ia, port);
-			return init();
-		} catch (IOException e) {
-			// We don't care about the exception, just that
-			// it didn't connect.
-			//handleException(e);
-			return false;
+	protected void connect(String host, int port, int timeout) throws IOException {
+		if (!closed) {
+			return;
 		}
+		InetSocketAddress isa = new InetSocketAddress(host, port);
+		socket = new Socket();
+		socket.connect(isa, timeout);
+		init();
 	}
 	
-	private boolean init() {
+	private void init() throws IOException {
 		this.host = socket.getInetAddress().getHostAddress();
 		this.port = socket.getPort();
 		
-		try {
-			in = new DataInputStream(socket.getInputStream());
-			out = new DataOutputStream(socket.getOutputStream());
-			connection.Connected(this);
-			closed = false;
+		in = new DataInputStream(socket.getInputStream());
+		out = new DataOutputStream(socket.getOutputStream());
+		connection.Connected(this);
+		closed = false;
+		if (!this.isAlive())
 			start();
-			return true;
-		} catch (IOException e) {
-			handleException(e);
-			return false;
-		}
 	}
 	
 	public String getHost() { return host; }
@@ -90,17 +94,28 @@ public abstract class SocketThread extends Thread {
 	}
 	
 	@Override
-	public void run() {
+	public void run() 
+		{
 		int messageLength;
 		byte[] buffer;
-		while (!closed) {
-			try {
-				messageLength = in.readInt();
-				logger.log( String.format("received message of length %d", messageLength) , 10 );
-				buffer = read(messageLength);
-				handleMessage( buffer );
-			} catch (IOException e) {
-				handleException(e);
+		while (true) {
+			if (closed) {
+				synchronized (this.socket) { 
+					try {
+						this.socket.wait();
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+			if (!closed) {
+				try {
+					messageLength = in.readInt();
+					logger.log( String.format("received message of length %d", messageLength) , 10 );
+					buffer = read(messageLength);
+					handleMessage( buffer );
+				} catch (IOException e) {
+					handleException(e);
+				}
 			}
 		}
 	}

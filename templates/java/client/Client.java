@@ -4,6 +4,12 @@ package {{ java_package }};
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+import android.util.Log;
+
+import {{ java_package_root }}.client.ConnectException.Reason;
 import {{ java_package_root }}.common.Connection;
 import {{ java_package_root }}.common.Logger;
 import {{ java_package_root }}.common.Messages;
@@ -13,6 +19,7 @@ public class Client extends SocketThread implements Logger {
 
 	private String host;
 	private int port;
+	private int connectTimeout = 2000;
 	
 	private SimpleDateFormat logDateFormat = new SimpleDateFormat("dd-MM-yy HH:mm:ss");
 	private static final int LOG_LEVEL = 5;
@@ -35,21 +42,50 @@ public class Client extends SocketThread implements Logger {
 	 * the client.
 	 * @return True if connected, false otherwise
 	 */
-	public boolean connect() {
+	public void connect() throws ConnectException {
 		// connect() function in SocketThread
-		return super.connect(host, port);
+		try {
+			super.connect(host, port, connectTimeout);
+		} catch (IOException e) {
+			if (e.getMessage().endsWith("Connection refused")) {
+				throw new ConnectException(e, Reason.CONNECTION_REFUSED);
+			} else if (e.getMessage().endsWith("Network unreachable")) {
+				throw new ConnectException(e, Reason.NETWORK_UNREACHABLE);
+			} else if (e.getMessage().endsWith("The operation timed out")) {
+				throw new ConnectException(e, Reason.TIMEOUT);
+			} else if (e instanceof SocketTimeoutException) {
+				throw new ConnectException(e, Reason.TIMEOUT);
+			} else if (e instanceof UnknownHostException) {
+				throw new ConnectException(e, Reason.UNKNOWN_HOST);
+			} else {
+				throw new ConnectException(e, Reason.UNKNOWN_REASON);
+			}
+		}
 	}
 	
 	public void disconnect() {
 		super.disconnect();
 	}
 
+	private static final String TAG = "mediaplayer_client";
 	private void logSingle(String s, int level) {
 		String datePrefix = logDateFormat.format( new Date () );
 		String out = String.format("%s> %s", datePrefix, s);
 		if (level <= LOG_LEVEL) {
 			System.out.println(out);
 		}
+		
+		// Logcat
+		if (level >= 10)
+			Log.v(TAG, s);
+		else if (level >= 7)
+			Log.d(TAG, s);
+		else if (level >= 5)
+			Log.i(TAG, s);
+		else if (level >= 2)
+			Log.w(TAG, s);
+		else
+			Log.e(TAG, s);
 	}
 	
 	public void log(String s, int level) {
