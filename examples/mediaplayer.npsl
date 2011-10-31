@@ -1,5 +1,5 @@
 settings (
-	javapackage: "dk.borgstrup.android.mediaplayer"
+	java_package: "dk.borgstrup.android.mediaplayer"
 )
 
 mediaplayer 100 (

@@ -35,10 +35,10 @@ class LanguageJava(OutputLanguage):
         
         settings = options.input["settings"]
         
-        if not settings.has_key("javapackage"):
+        if not settings.has_key("java_package"):
             raise RuntimeError("No java package specified. Specify a package with the 'javapackage' setting")
         
-        options.input["java_package_root"] = settings["javapackage"] + ".npsl"
+        options.input["java_package_root"] = settings["java_package"] + ".npsl"
         
         OutputLanguage.set_options(self, options, cmd_optargs)
 

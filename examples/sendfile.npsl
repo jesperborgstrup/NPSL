@@ -1,5 +1,5 @@
 settings (
-	javapackage: "com.example.sendfile"
+	java_package: "com.example.sendfile"
 )
 
 => 1 file (filename, string), (data, binary)

@@ -1,3 +1,7 @@
+settings (
+	java_package: "com.example.shell"
+)
+
 param => (user, int)
 shell 400 (
        param => (executable, string)
