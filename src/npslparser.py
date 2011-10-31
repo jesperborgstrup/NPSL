@@ -1,6 +1,7 @@
-from grammar import integer, direction, parameter, moduleparam, message, module, npsl
+from grammar import integer, boolean, direction, parameter, moduleparam, message, module, setting, settings, npsl
 
 integer.addParseAction(lambda s,l,tok: int(tok[0]))
+boolean.addParseAction(lambda s,l,tok: True if tok[0]=="true" else False)
 
 def splitDirections(item):
 	if item["direction"] == "both":
@@ -40,6 +41,7 @@ def makeModule(name,Id,items):
 	params = []
 	messages = []
 	modules = []
+	settings = []
 	
 	for decl in items:
 		if decl["type"] == "moduleparameter":
@@ -48,8 +50,10 @@ def makeModule(name,Id,items):
 			messages.extend( splitDirections( decl ) )
 		elif decl["type"] == "module":
 			modules.append(decl)
+		elif decl["type"] == "settings":
+			settings.append(decl["settings"])
 			
-	return {"name": name, "id": Id, "parameters": params, "messages": messages, "modules": modules, "type": "module"}
+	return {"name": name, "id": Id, "parameters": params, "messages": messages, "modules": modules, "type": "module", "settings": settings}
 
 def parseModule(s,l,tok):
 	match = tok[0]
@@ -58,6 +62,24 @@ def parseModule(s,l,tok):
 	return makeModule(name, Id, match[2:])
 
 module.addParseAction(parseModule)
+
+def parseSetting(s,l,tok):
+	match = tok[0]
+	return {"type": "setting", "name": match[0], "value": match[1]}
+	
+setting.addParseAction(parseSetting)
+
+def makeSettings(settings):
+	dict = {}
+	for setting in settings:
+		dict[setting["name"]] = setting["value"] 
+	return {"type": "settings", "settings": dict}
+
+def parseSettings(s,l,tok):
+	match = tok[0]
+	return makeSettings( match[1] )
+	
+settings.addParseAction(parseSettings)
 
 def parseNPSL(s,l,tok):
 	return makeModule("main", -1, tok)

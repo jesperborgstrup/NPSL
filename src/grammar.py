@@ -11,7 +11,10 @@ module       ::= identifier + "(" + declarations + ")"
 declaration  ::= moduleparam | message | module
 declarations ::= declaration*
 
-npsl         ::= declarations
+setting      ::= identifier + ":" + (string | integer | boolean)
+settings     ::= keyword(settings) + "(" + setting* + ")"
+
+npsl         ::= settings | declarations
 """
 
 from pyparsing import *
@@ -20,6 +23,7 @@ declarations = Forward()
 
 identifier   = Word(alphas, alphanums + "_")
 integer      = Word(nums)
+boolean      = CaselessLiteral("true") | CaselessLiteral("false")
 
 lparam       = Suppress( Literal("(") )
 rparam       = Suppress( Literal(")") )
@@ -34,10 +38,14 @@ module       = Group( identifier + integer + lparam + declarations + rparam )
 
 comment      = Suppress( "#" + restOfLine)
 
+settingvalue = (boolean | integer | quotedString.setParseAction(removeQuotes))
+setting      = Group( identifier + Suppress( Literal( ":" ) ) + settingvalue )
+settings     = Group( Keyword("settings") + lparam + Group(ZeroOrMore( setting )) + rparam )
+
 declaration  = moduleparam | message | module
 declarations << ( ZeroOrMore( declaration ) )
 
-npsl         = declarations + StringEnd()
+npsl         = ZeroOrMore(settings | declaration) + StringEnd()
 
 npslparser   = npsl.copy()    
 

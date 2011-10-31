@@ -100,6 +100,8 @@ def process_options(optargs):
 			
 	# Read NPSL
 	result.input.update( npsl.parseString( "".join(result.input_file.readlines()) )[0] )
+	print result
+	sys.exit()
 	
 	# Make output folder if it doesn't exist
 	if not os.path.exists( result.output_folder ):
