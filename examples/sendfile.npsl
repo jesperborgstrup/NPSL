@@ -1,1 +1,5 @@
+settings (
+	javapackage: "com.example.sendfile"
+)
+
 => 1 file (filename, string), (data, binary)

@@ -93,16 +93,15 @@ def process_options(optargs):
 								 "Possible languages are:\r\n" + "\r\n".join(languages.__all__.keys()))
 		else:
 			result.language = languages.__all__[lang]
-			try:
-				result.language.set_options(result, optargs)
-			except RuntimeError, err:
-				raise ArgumentError(err.message)
 			
 	# Read NPSL
 	result.input.update( npsl.parseString( "".join(result.input_file.readlines()) )[0] )
-	print result
-	sys.exit()
-	
+
+	try:
+		result.language.set_options(result, optargs)
+	except RuntimeError, err:
+		raise ArgumentError(err.message)
+
 	# Make output folder if it doesn't exist
 	if not os.path.exists( result.output_folder ):
 		os.mkdir( result.output_folder )

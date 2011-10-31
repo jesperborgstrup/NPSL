@@ -1,0 +1,1 @@
+python src/npsl.py -i examples/mediaplayer.npsl -c -o tmp/java_mediaplayer_client -l java -v

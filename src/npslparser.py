@@ -41,7 +41,7 @@ def makeModule(name,Id,items):
 	params = []
 	messages = []
 	modules = []
-	settings = []
+	settings = {}
 	
 	for decl in items:
 		if decl["type"] == "moduleparameter":
@@ -51,7 +51,7 @@ def makeModule(name,Id,items):
 		elif decl["type"] == "module":
 			modules.append(decl)
 		elif decl["type"] == "settings":
-			settings.append(decl["settings"])
+			settings.update(decl["settings"])
 			
 	return {"name": name, "id": Id, "parameters": params, "messages": messages, "modules": modules, "type": "module", "settings": settings}
 

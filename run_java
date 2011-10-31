@@ -1,3 +1,3 @@
 #!/bin/bash
-python src/npsl.py --verbose --in-file=examples/mediaplayer.npsl --client --out-folder=tmp/java_mediaplayer_client --out-language=java --java-package=com.example
-python src/npsl.py --verbose --in-file=examples/mediaplayer.npsl --server --out-folder=tmp/java_mediaplayer_server --out-language=java --java-package=com.example
+python src/npsl.py --verbose --in-file=examples/mediaplayer.npsl --client --out-folder=tmp/java_mediaplayer_client --out-language=java
+python src/npsl.py --verbose --in-file=examples/mediaplayer.npsl --server --out-folder=tmp/java_mediaplayer_server --out-language=java
