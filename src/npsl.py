@@ -51,6 +51,17 @@ def makeOptionParser():
 	
 	return parser
 
+default_settings = {"java_package": "com.example",
+					"ignore_unknown_messages": True}
+
+def get_default_settings(settings):
+	# Prefix with 'setting_'
+	result = {}
+	for (setting, value) in default_settings.iteritems():
+		prefixed_setting = "setting_%s" % setting
+		result[prefixed_setting] = value if not settings.has_key(setting) else settings[setting]
+	return result
+
 def process_options(optargs):
 	options, args = optargs
 	result = Options()
@@ -96,7 +107,9 @@ def process_options(optargs):
 			
 	# Read NPSL
 	result.input.update( npsl.parseString( "".join(result.input_file.readlines()) )[0] )
-
+	
+	result.input.update( get_default_settings( result.input["settings"] ) )
+	
 	try:
 		result.language.set_options(result, optargs)
 	except RuntimeError, err:

@@ -17,6 +17,9 @@ def datatype(str):
         return "DataTypes.Binary"
     else:
         raise RuntimeError( 'Unknown datatype: ' % str )
+
+def literal(val):
+    return repr( val )
     
 class LanguagePython(OutputLanguage):
     
@@ -26,6 +29,7 @@ class LanguagePython(OutputLanguage):
                                 folder="python",
                                 casing=Casing.UNDERSCORE,
                                 filters=[("datatype", datatype),
+                                         ("literal", literal)
                                          ]
                                 )
         

@@ -18,6 +18,15 @@ def datatype(str):
         return "DataType.Binary"
     else:
         raise RuntimeError( 'Unknown datatype: ' % str )
+    
+def literal(val):
+    tp = type(val).__name__
+    if tp == 'int' or tp == 'float':
+        return val
+    elif tp == 'bool':
+        return "true" if val else "false"
+    elif tp == 'str':
+        return repr( val )
 
 class LanguageJava(OutputLanguage):
     
@@ -27,6 +36,7 @@ class LanguageJava(OutputLanguage):
                                 folder="java",
                                 casing=Casing.CAMEL_CASING,
                                 filters=[("datatype", datatype),
+                                         ("literal", literal)
                                          ]
                                 )
         
@@ -54,9 +64,6 @@ class LanguageJava(OutputLanguage):
         output_dest = "src/" + javapackage.replace(".", "/") + "/" + filename
         
         self.options.input["java_package"] = javapackage
-#        print self.options.input
-#        import sys
-#        sys.exit()
         
         return (output_dest, template.render(self.options.input))
 
