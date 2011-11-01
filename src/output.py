@@ -48,5 +48,5 @@ class Output:
 	def write_prologue_comment(self, output_file, output_dest):
 		comment = self.options.language.comment( self.prologue_comment )
 		comment = comment.replace( "%filename%", output_dest )
-		comment = comment.replace( "%timestamp%", time.strftime( "%d/%m/%Y %H:%i:%s" ) )
+		comment = comment.replace( "%timestamp%", time.strftime( "%d/%m/%Y %H:%M:%S" ) )
 		output_file.write( comment )
