@@ -52,7 +52,7 @@ class Java:
                                                  filename )
                 
                 if not os.path.exists( templatefilename ):
-                    print "Warning! Template file %s does not exists. Skipping..." % templatefilename
+                    print "Warning! Template file %s does not exist. Skipping..." % templatefilename
                     continue
                 
                 f = open( templatefilename, "w" )
@@ -60,4 +60,4 @@ class Java:
                 f.close()
                 
                 if self.options.verbose:
-                    print "Wrote %s" % filename
+                    print "Wrote %s (%d bytes)" % (filename, len( template ) )

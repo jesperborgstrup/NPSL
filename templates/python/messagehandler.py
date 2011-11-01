@@ -1,5 +1,4 @@
 {% set output_dest, package = "messagehandler.py", "common" %}
-
 import struct
 from datatypes import DataTypes
 from settings import Settings

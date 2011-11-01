@@ -21,7 +21,8 @@ def makeOptionParser():
     
     return parser
 
-languages = {"java": "tools.templater.java"}
+languages = {"java": "tools.templater.java",
+             "python": "tools.templater.python"}
 
 class Options:
     infolder = None
@@ -60,6 +61,9 @@ def process_options(optargs):
             if lang == "java":
                 from tools.templater.java import Java
                 return Java(result)
+            elif lang == "python":
+                from tools.templater.python import Python
+                return Python(result)
             
 if __name__ == "__main__":
     optionparser = makeOptionParser()

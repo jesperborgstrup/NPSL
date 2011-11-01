@@ -1,5 +1,4 @@
 {% set output_dest, package = "socketthread.py", "common" %}
-
 import threading
 import struct
 import socket

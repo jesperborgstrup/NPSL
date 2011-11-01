@@ -1,5 +1,4 @@
 {% set output_dest, package = "messagetype.py", "common" %}
-
 class MessageType:
 	id = None
 	name = None

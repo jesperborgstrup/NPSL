@@ -1,5 +1,4 @@
 {% set output_dest, package = "messagefactory.py", "common" %}
-
 from datatypes import DataTypes
 import struct
 
@@ -9,6 +8,7 @@ class MessageFactory:
 	params = []
 	socket = None
 	
+	# socket is either a single socket or a list of sockets
 	def __init__(self, mainmessage, parent=None, params=[], socket=None):
 		self.main = mainmessage
 		self.parent = parent
@@ -51,7 +51,10 @@ class MessageFactory:
 			total_length = len( params ) + len( subdata )
 			result = struct.pack(">I", total_length) + params + subdata
 			if self.socket != None:
-				self.socket.send( result )
+				if type(self.socket).__name__ == "list":
+					[socket.send( result ) for socket in self.socket]
+				else:
+					self.socket.send( result )
 			else:
 				return result
 		

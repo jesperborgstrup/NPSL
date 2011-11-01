@@ -8,8 +8,8 @@ from datatypes import DataTypes
             id={{ id }},
 {% if parameters|length > 0 %}            params=[{% for item in parameters|direction(direction) %}("{{ item.parameter.name }}", {{ item.parameter.type|datatype }}){% if not loop.last %}, {% endif %}{% endfor %}],
 {% else %}{% endif %}{% if messages|length > 0 or modules|length > 0 %}            messages={ {% if messages|length > 0 %}
-{% for item in messages|direction(direction) %}                      {{ "% 4d"|format(item.id) }}: MessageType({{ "% 4d"|format(item.id) }}, "{{ item.name }}"{% if item.parameters|length > 0 %}, params=[{% for param in item.parameters %}("{{ param.name }}", {{ param.type|datatype }}){% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}),
-{% endfor %}{% else %}{% endif %}{% if modules|length > 0 %}{% for module in modules %}{{ "% 4d"|format(module.id) }}: {{ module_macro(module.name, module.id, module.parameters, module.messages, module.modules, direction, indent+16) }}{% endfor %}
+{% for item in messages|direction(direction) %}                      {{ "% 4d"|format(item.id) }}: MessageType({{ "% 4d"|format(item.id) }}, "{{ item.name }}"{% if item.parameters|length > 0 %}, params=[{% for param in item.parameters %}("{{ param.name }}", {{ param.type|datatype }}){% if not loop.last %}, {% endif %}{% endfor %}]{% if not loop.last %}, {% endif %}{% endif %}),
+{% endfor %}{% else %}{% endif %}{% if modules|length > 0 %}{% for module in modules %}{{ "% 4d"|format(module.id) }}: {{ module_macro(module.name, module.id, module.parameters, module.messages, module.modules, direction, indent+16) }}{% if not loop.last %}, {% endif %}{% endfor %}
 {% else %}{% endif %}                     }{% endif %}
            ){% endfilter %}{%- endmacro %}
 

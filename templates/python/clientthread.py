@@ -1,5 +1,4 @@
 {% set output_dest, package = "clientthread.py", "server" %}
-
 from messagefactory import MessageFactory
 from socketthread import SocketThread
 import messages

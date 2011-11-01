@@ -1,5 +1,4 @@
 {% set output_dest, package = "datatypes.py", "common" %}
-
 class DataTypes:
 	Byte = 1
 	Int = 2

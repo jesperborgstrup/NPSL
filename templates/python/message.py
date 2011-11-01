@@ -1,5 +1,4 @@
 {% set output_dest, package = "message.py", "common" %}
-
 class Message:
 	name = None
 	params = {}

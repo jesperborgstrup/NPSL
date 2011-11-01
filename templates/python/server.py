@@ -1,13 +1,12 @@
 {% set output_dest, package = "server.py", "server" %}
-
 import socket
 import threading
-import struct
 import locale
 import sys
 import traceback
-from settings import Settings
+import messages
 from clientthread import ClientThread
+from messagefactory import MessageFactory
 
 class Server(threading.Thread):
 	threads = []
@@ -16,6 +15,7 @@ class Server(threading.Thread):
 	port = None
 	interface = None
 	logger = None
+	broadcast = None
 	
 	def __init__(self, host='', port=1234, interface=None, logger=None):
 		threading.Thread.__init__(self)
@@ -23,6 +23,7 @@ class Server(threading.Thread):
 		self.host = host
 		self.interface = interface
 		self.default_encoding = locale.getdefaultlocale()[1]
+		self.broadcast = MessageFactory(messages.clientmain, socket=[])
 
 		if logger is None:
 			self.logger = DummyLogger()
@@ -43,6 +44,7 @@ class Server(threading.Thread):
 			try:
 				thread = ClientThread( self.socket.accept(), self, logger=self.logger )
 				self.threads.append( thread )
+				self.broadcast.socket.append( thread )
 				thread.start()
 			except socket.error, (value, message):
 				self.socket_error(value, message)
