@@ -169,6 +169,8 @@ public abstract class SocketThread extends Thread {
 			return;
 		try {
 			closed = true;
+			socket.shutdownInput();
+			socket.shutdownOutput();
 			socket.close();
 			connection.Disconnected(this, reason);
 		} catch (IOException e) {
